@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download Blank Spring Garden Frames</title>
+    <title>The Stables Cottage Frames</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Checkerboard background to prove the frames are transparent inside */
@@ -18,23 +18,24 @@
 <body class="bg-zinc-950 flex flex-col items-center justify-start min-h-screen p-8 font-sans text-white">
 
     <div class="text-center mb-12">
-        <h1 class="text-4xl font-extrabold text-[#faecec] tracking-tight mb-2">Spring Garden Overlays</h1>
-        <p class="text-[#93a897] font-medium tracking-widest uppercase text-sm">VibeShoot Asset Extractor</p>
+        <h1 class="text-4xl font-extrabold text-[#faecec] tracking-tight mb-2">The Stables Cottage Overlays</h1>
+        <p class="text-[#93a897] font-medium tracking-widest uppercase text-sm">Landscape Edition</p>
         <p class="text-sm text-zinc-500 mt-4">Click below to download the blank, transparent PNG frames for your photobooth.</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-16 w-full max-w-5xl items-start justify-items-center">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 w-full max-w-6xl items-start justify-items-center">
 
-        <!-- ASSET 1: SINGLE PHOTO FRAME -->
+        <!-- ASSET 1: SINGLE PHOTO FRAME (LANDSCAPE) -->
         <div class="flex flex-col items-center w-full">
-            <h2 class="text-xl font-bold mb-4 text-[#caa366] uppercase tracking-wider">1. Single Photo Frame</h2>
-            <button onclick="downloadImage('single-svg', 'spring_single_frame.png')" class="mb-8 w-full max-w-xs py-4 bg-gradient-to-r from-[#faecec] to-[#f4dada] text-[#6d452b] font-extrabold uppercase tracking-widest rounded-xl hover:scale-[1.02] shadow-[0_4px_20px_rgba(250,236,236,0.15)] transition duration-200">
-                📥 Download 1-Photo (PNG)
+            <h2 class="text-xl font-bold mb-4 text-[#caa366] uppercase tracking-wider">1. Landscape Frame (1800x1200)</h2>
+            <button onclick="downloadImage('single-svg', 'stables_landscape_frame.png', 1800, 1200)" class="mb-8 w-full max-w-sm py-4 bg-gradient-to-r from-[#faecec] to-[#f4dada] text-[#6d452b] font-extrabold uppercase tracking-widest rounded-xl hover:scale-[1.02] shadow-[0_4px_20px_rgba(250,236,236,0.15)] transition duration-200">
+                📥 Download Landscape (PNG)
             </button>
-            <div class="relative w-[280px] h-[420px] checkerboard shadow-[0_0_40px_rgba(0,0,0,0.5)] rounded-xl overflow-hidden border border-zinc-700">
+            <!-- Wide container for landscape preview -->
+            <div class="relative w-[450px] h-[300px] checkerboard shadow-[0_0_40px_rgba(0,0,0,0.5)] rounded-xl overflow-hidden border border-zinc-700">
                 
-                <!-- SVG SINGLE FRAME (Blank) -->
-                <svg id="single-svg" viewBox="0 0 1200 1800" xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 w-full h-full">
+                <!-- SVG SINGLE FRAME (Blank Landscape) -->
+                <svg id="single-svg" viewBox="0 0 1800 1200" xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 w-full h-full">
                     <defs>
                         <g id="blush-flower">
                             <circle cx="-15" cy="-15" r="18" fill="#f4dada" opacity="0.9"/>
@@ -52,33 +53,42 @@
                     </defs>
 
                     <!-- Fully Transparent Image Area -->
-                    <rect width="1200" height="1800" fill="none" />
+                    <rect width="1800" height="1200" fill="none" />
                     
-                    <rect x="40" y="40" width="1120" height="1720" fill="none" stroke="#caa366" stroke-width="8" />
-                    <rect x="60" y="60" width="1080" height="1680" fill="none" stroke="#93a897" stroke-width="2" opacity="0.6"/>
+                    <!-- Wide Borders -->
+                    <rect x="40" y="40" width="1720" height="1120" fill="none" stroke="#caa366" stroke-width="8" />
+                    <rect x="60" y="60" width="1680" height="1080" fill="none" stroke="#93a897" stroke-width="2" opacity="0.6"/>
 
-                    <path d="M 0 1450 Q 600 1420 1200 1450 V 1800 H 0 Z" fill="#fdfbf7" opacity="0.97" />
+                    <!-- Elegant Cream Base for Text (Landscape Proportions) -->
+                    <path d="M 0 920 Q 900 890 1800 920 V 1200 H 0 Z" fill="#fdfbf7" opacity="0.97" />
                     
+                    <!-- Floral Placements -->
+                    <!-- Top Left -->
                     <g transform="translate(60, 60)"><use href="#gold-vine" transform="rotate(135)" /><use href="#sage-leaf" transform="rotate(110) scale(0.8)" /><use href="#blush-flower" transform="translate(20, 20) scale(0.8)" /></g>
-                    <g transform="translate(1140, 60)"><use href="#gold-vine" transform="rotate(-135)" /><use href="#sage-leaf" transform="rotate(-110) scale(0.8)" /><use href="#blush-flower" transform="translate(-20, 20) scale(0.8)" /></g>
-                    <g transform="translate(600, 1420)"><use href="#sage-leaf" transform="rotate(-45) translate(-40, 0) scale(0.7)" /><use href="#sage-leaf" transform="rotate(45) translate(40, 0) scale(0.7)" /><use href="#blush-flower" /></g>
+                    <!-- Top Right -->
+                    <g transform="translate(1740, 60)"><use href="#gold-vine" transform="rotate(-135)" /><use href="#sage-leaf" transform="rotate(-110) scale(0.8)" /><use href="#blush-flower" transform="translate(-20, 20) scale(0.8)" /></g>
+                    <!-- Bottom Center -->
+                    <g transform="translate(900, 890)"><use href="#sage-leaf" transform="rotate(-45) translate(-40, 0) scale(0.7)" /><use href="#sage-leaf" transform="rotate(45) translate(40, 0) scale(0.7)" /><use href="#blush-flower" /></g>
 
-                    <text x="600" y="1600" font-family="'Times New Roman', serif" font-weight="normal" font-size="80" fill="#caa366" text-anchor="middle" letter-spacing="6">Allen &amp; Marry</text>
-                    <text x="600" y="1680" font-family="'Arial', sans-serif" font-weight="bold" font-size="28" fill="#93a897" text-anchor="middle" letter-spacing="10">SEPTEMBER 08, 2026</text>
-                    <text x="600" y="1740" font-family="'Times New Roman', serif" font-style="italic" font-size="32" fill="#888" text-anchor="middle" letter-spacing="2">A Beautiful Beginning</text>
+                    <!-- Typography Centered horizontally at 900 -->
+                    <text x="900" y="1030" font-family="'Times New Roman', serif" font-weight="normal" font-size="80" fill="#caa366" text-anchor="middle" letter-spacing="6">Allen &amp; Marry</text>
+                    <text x="900" y="1100" font-family="'Arial', sans-serif" font-weight="bold" font-size="28" fill="#93a897" text-anchor="middle" letter-spacing="10">SEPTEMBER 08, 2026</text>
+                    
+                    <!-- Updated Venue Text -->
+                    <text x="900" y="1160" font-family="'Times New Roman', serif" font-style="italic" font-size="28" fill="#888" text-anchor="middle" letter-spacing="2">The Stables Cottage - North West Auckland</text>
                 </svg>
             </div>
         </div>
 
-        <!-- ASSET 2: 3-PHOTO STRIP -->
+        <!-- ASSET 2: 3-PHOTO STRIP (PORTRAIT) -->
         <div class="flex flex-col items-center w-full">
-            <h2 class="text-xl font-bold mb-4 text-[#caa366] uppercase tracking-wider">2. 3-Photo Strip</h2>
-            <button onclick="downloadImage('triple-svg', 'spring_triple_frame.png')" class="mb-8 w-full max-w-xs py-4 bg-gradient-to-r from-[#faecec] to-[#f4dada] text-[#6d452b] font-extrabold uppercase tracking-widest rounded-xl hover:scale-[1.02] shadow-[0_4px_20px_rgba(250,236,236,0.15)] transition duration-200">
+            <h2 class="text-xl font-bold mb-4 text-[#caa366] uppercase tracking-wider">2. 3-Photo Strip (1200x1800)</h2>
+            <button onclick="downloadImage('triple-svg', 'stables_triple_frame.png', 1200, 1800)" class="mb-8 w-full max-w-sm py-4 bg-gradient-to-r from-[#faecec] to-[#f4dada] text-[#6d452b] font-extrabold uppercase tracking-widest rounded-xl hover:scale-[1.02] shadow-[0_4px_20px_rgba(250,236,236,0.15)] transition duration-200">
                 📥 Download 3-Strip (PNG)
             </button>
-            <div class="relative w-[280px] h-[420px] checkerboard shadow-[0_0_40px_rgba(0,0,0,0.5)] rounded-xl overflow-hidden border border-zinc-700">
+            <div class="relative w-[200px] h-[300px] checkerboard shadow-[0_0_40px_rgba(0,0,0,0.5)] rounded-xl overflow-hidden border border-zinc-700">
                 
-                <!-- SVG 3-PHOTO STRIP (Blank) -->
+                <!-- SVG 3-PHOTO STRIP (Blank Portrait) -->
                 <svg id="triple-svg" viewBox="0 0 1200 1800" xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 w-full h-full">
                     
                     <!-- Punched Out Background -> Three transparent windows -->
@@ -94,7 +104,9 @@
 
                     <rect x="30" y="30" width="1140" height="1740" fill="none" stroke="#caa366" stroke-width="8" />
 
-                    <text x="600" y="100" font-family="'Arial', sans-serif" font-weight="bold" font-size="28" fill="#caa366" text-anchor="middle" letter-spacing="12">SPRING GARDEN</text>
+                    <!-- Updated Venue Header (Split into two elegant lines) -->
+                    <text x="600" y="85" font-family="'Arial', sans-serif" font-weight="bold" font-size="26" fill="#caa366" text-anchor="middle" letter-spacing="8">THE STABLES COTTAGE</text>
+                    <text x="600" y="115" font-family="'Arial', sans-serif" font-weight="bold" font-size="14" fill="#93a897" text-anchor="middle" letter-spacing="6">NORTH WEST AUCKLAND</text>
 
                     <g transform="translate(600, 640)">
                         <line x1="-150" y1="0" x2="150" y2="0" stroke="#caa366" stroke-width="2"/>
@@ -117,14 +129,15 @@
 
     <script>
         // Engine to export SVGs exactly as transparent PNGs
-        function downloadImage(svgId, filename) {
+        // Added 'width' and 'height' parameters so it works for both landscape and portrait!
+        function downloadImage(svgId, filename, outputWidth, outputHeight) {
             const svgElement = document.getElementById(svgId);
             const svgData = new XMLSerializer().serializeToString(svgElement);
             const canvas = document.createElement("canvas");
             
-            // Output is specifically sized 1200x1800 for VibeShoot
-            canvas.width = 1200;
-            canvas.height = 1800;
+            // Set the export dimensions based on the button clicked
+            canvas.width = outputWidth;
+            canvas.height = outputHeight;
             const ctx = canvas.getContext("2d");
             
             const img = new Image();
@@ -145,5 +158,3 @@
     </script>
 </body>
 </html>
-
-```
