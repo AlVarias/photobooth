@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wedding Photo Booth</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Allen & Marry | Wedding Photo Booth</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <script>
@@ -11,11 +12,9 @@
             theme: {
                 extend: {
                     colors: {
-                        gold: {
-                            400: '#dac28b',
-                            500: '#caa366',
-                            600: '#bc894d',
-                        }
+                        gold: { 400: '#dac28b', 500: '#caa366', 600: '#bc894d' },
+                        sage: { 400: '#a3b8a7', 500: '#93a897' },
+                        blush: { 400: '#faecec', 500: '#f4dada' }
                     }
                 }
             }
@@ -23,177 +22,221 @@
     </script>
 
     <style>
-        * {
-            user-select: none;
-            -webkit-user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+        ::-webkit-scrollbar { display: none; }
         
+        body { 
+            background-color: #0a0a0c; 
+            color: white; 
+            overflow: hidden; 
+            width: 100vw; 
+            height: 100vh; 
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
         .glass-panel {
-            background: rgba(15, 15, 22, 0.75);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(20, 20, 25, 0.85);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .pulse-border { animation: borderPulse 4s infinite ease-in-out; }
-        .pulse-text { animation: textPulse 2s infinite ease-in-out; }
-        .flash-fire { animation: flashOverlay 0.3s ease-out forwards; }
+        .flash-fire { animation: flashOverlay 0.4s ease-out forwards; }
+        @keyframes flashOverlay { 0% { opacity: 1; } 100% { opacity: 0; } }
 
-        @keyframes borderPulse {
-            0%, 100% { border-color: rgba(255, 255, 255, 0.12); }
-            50% { border-color: rgba(202, 163, 102, 0.45); }
-        }
-
+        .pulse-text { animation: textPulse 2.5s infinite ease-in-out; }
         @keyframes textPulse {
-            0%, 100% { transform: scale(0.97); opacity: 0.8; text-shadow: 0 0 15px rgba(255,255,255,0.05); }
-            50% { transform: scale(1.03); opacity: 1; text-shadow: 0 0 35px rgba(202, 163, 102, 0.5); }
+            0%, 100% { opacity: 0.8; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1.02); text-shadow: 0 0 25px rgba(202, 163, 102, 0.4); }
         }
 
-        @keyframes flashOverlay {
-            0% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-
-        /* Dynamic Backdrop */
+        /* Filter selection styling */
+        .filter-btn.active { border-color: #caa366; background: rgba(202, 163, 102, 0.15); box-shadow: 0 0 15px rgba(202,163,102,0.3); }
+        
         .blur-bg-engine {
-            position: absolute;
-            width: 104%;
-            height: 104%;
-            top: -2%;
-            left: -2%;
-            background-size: cover;
-            background-position: center;
-            background-image: url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200');
-            filter: blur(6px) brightness(55%);
-            z-index: 1;
-            transition: background-image 0.8s ease-in-out;
+            position: absolute; inset: -5%; width: 110%; height: 110%;
+            background-size: cover; background-position: center;
+            filter: blur(8px) brightness(40%); z-index: 0; transition: background-image 0.8s ease-in-out;
         }
-
-        ::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="bg-[#050507] text-white overflow-hidden w-screen h-screen font-sans">
+<body class="flex items-center justify-center">
 
-    <div id="booth-alert-modal" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-        <div class="bg-[#121216] border border-red-500/30 w-full max-w-md rounded-2xl p-6 text-center shadow-2xl">
+    <!-- ALERTS -->
+    <div id="booth-alert-modal" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+        <div class="bg-zinc-900 border border-red-500/50 w-full max-w-md rounded-2xl p-6 text-center shadow-2xl">
             <div class="text-red-400 text-xl font-bold mb-2" id="alert-title">Alert</div>
             <div class="text-zinc-300 text-sm mb-6" id="alert-message">Details</div>
-            <button class="bg-zinc-800 hover:bg-zinc-700 text-white font-semibold py-2.5 px-6 rounded-xl" onclick="closeAlertModal()">Dismiss</button>
+            <button class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-3 px-8 rounded-xl" onclick="closeAlertModal()">Dismiss</button>
         </div>
     </div>
 
-    <div id="setup-screen" class="fixed inset-0 z-50 overflow-y-auto bg-gradient-to-br from-[#0a0a0e] to-[#12121b] flex items-center justify-center p-6">
-        <div class="bg-[#121218]/90 border border-zinc-800 w-full max-w-2xl rounded-3xl p-8 shadow-2xl backdrop-blur-xl">
-            <div class="text-center mb-6">
-                <h2 class="text-3xl font-extrabold text-gold-400 tracking-tight">Wedding Booth Setup</h2>
-                <p class="text-zinc-400 text-sm mt-1">100% Offline USB Storage Mode</p>
-            </div>
+    <!-- STAGE 0: SETUP DASHBOARD -->
+    <div id="setup-screen" class="absolute inset-0 z-50 overflow-y-auto bg-zinc-950 flex flex-col items-center justify-center p-6">
+        <div class="bg-zinc-900 border border-zinc-800 w-full max-w-4xl rounded-3xl p-8 shadow-2xl">
+            <h2 class="text-3xl font-extrabold text-gold-400 mb-1 text-center">Landscape Photo Booth Setup</h2>
+            <p class="text-zinc-400 text-sm text-center mb-8">100% Offline USB Storage Mode</p>
 
-            <div class="mb-6 p-5 rounded-xl bg-zinc-900/60 border border-zinc-800 text-center">
-                <h3 class="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-3">1. Map USB Storage Target</h3>
-                <button id="local-dir-btn" class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg text-sm transition duration-150 shadow-lg shadow-blue-900/20" onclick="handleLocalDirClick(event)">
-                    📁 Select Main USB Folder
-                </button>
-                <p id="local-dir-status" class="text-xs text-red-400 font-semibold mt-3 italic">Waiting for USB target selection...</p>
-                <p class="text-[10px] text-zinc-500 mt-1">The system will automatically create 'raw' and 'edited' folders inside your selection.</p>
-            </div>
-
-            <div class="space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1.5">Event Name:</label>
-                        <input type="text" id="event-name-input" class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white text-sm focus:outline-none focus:border-gold-500" value="Wedding">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Left Col -->
+                <div class="space-y-5">
+                    <div class="p-5 rounded-xl bg-zinc-950 border border-zinc-800 text-center">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-zinc-500 mb-3">1. Map USB Storage Target</h3>
+                        <button class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg text-sm w-full transition" onclick="handleLocalDirClick(event)">
+                            📁 Select Main USB Folder
+                        </button>
+                        <p id="local-dir-status" class="text-xs text-red-400 font-bold mt-3 italic">Waiting for USB target...</p>
                     </div>
+
                     <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1.5">Session Starting #:</label>
-                        <input type="number" id="counter-input" class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white text-sm focus:outline-none focus:border-gold-500" value="1" min="1">
+                        <label class="block text-xs font-bold uppercase text-zinc-500 mb-1">Map Camera Device:</label>
+                        <select id="camera-select" class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white text-sm focus:outline-none focus:border-gold-500">
+                            <option value="">Fetching system webcams...</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-zinc-500 mb-1">Event Name:</label>
+                            <input type="text" id="event-name-input" class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white text-sm" value="Wedding">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-zinc-500 mb-1">Start #:</label>
+                            <input type="number" id="counter-input" class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white text-sm" value="1" min="1">
+                        </div>
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1.5">Map Camera Device:</label>
-                    <select id="camera-select" class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white text-sm focus:outline-none focus:border-gold-500">
-                        <option value="">Fetching system webcams...</option>
-                    </select>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                <!-- Right Col (Assets) -->
+                <div class="space-y-4 bg-zinc-950 p-5 rounded-xl border border-zinc-800">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">2. Upload Overlay Assets</h3>
                     <div>
-                        <label class="block text-[10px] font-semibold uppercase text-zinc-500 mb-1">Custom Backdrop:</label>
+                        <label class="block text-[10px] font-bold uppercase text-gold-500 mb-1">Custom Backdrop (JPG):</label>
                         <input type="file" id="bg-file-input" class="w-full text-xs text-zinc-400" accept="image/*">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-semibold uppercase text-zinc-500 mb-1">1-Photo Frame (PNG):</label>
+                        <label class="block text-[10px] font-bold uppercase text-gold-500 mb-1">1-Photo Frame (PNG):</label>
                         <input type="file" id="single-frame-input" class="w-full text-xs text-zinc-400" accept="image/png">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-semibold uppercase text-zinc-500 mb-1">3-Photo Frame (PNG):</label>
+                        <label class="block text-[10px] font-bold uppercase text-gold-500 mb-1">3-Photo Frame (PNG):</label>
                         <input type="file" id="triple-frame-input" class="w-full text-xs text-zinc-400" accept="image/png">
                     </div>
                 </div>
             </div>
 
-            <button class="w-full mt-8 py-4 bg-gradient-to-r from-gold-600 to-gold-400 text-black font-extrabold rounded-xl text-base uppercase tracking-wider transition duration-150 shadow-xl shadow-gold-950/20 active:scale-[0.98]" onclick="lockAndInitBooth()">
-                Initialize Photobooth Terminal
+            <button class="w-full mt-8 py-4 bg-gold-500 text-black font-extrabold rounded-xl text-lg uppercase tracking-wider hover:bg-gold-400 transition" onclick="lockAndInitBooth()">
+                Launch Landscape Terminal
             </button>
         </div>
     </div>
 
-    <div id="app-wrapper" class="hidden relative w-full h-full flex items-center justify-center overflow-hidden">
-        
+    <!-- APP WRAPPER -->
+    <div id="app-wrapper" class="hidden relative w-full h-full">
         <div id="master-blur-bg" class="blur-bg-engine"></div>
         <div id="flash-screen" class="absolute inset-0 bg-white opacity-0 pointer-events-none z-[100]"></div>
 
-        <div id="idle-screen" class="absolute inset-0 z-10 flex flex-col items-center justify-center p-8 cursor-pointer" onclick="initiateUserSession()">
-            <div class="absolute inset-[8%] border-8 border-white/10 rounded-3xl pointer-events-none pulse-border shadow-[inset_0_0_60px_rgba(0,0,0,0.65)]"></div>
+        <!-- STAGE 1: STANDBY -->
+        <div id="idle-screen" class="absolute inset-0 z-10 flex flex-col items-center justify-center cursor-pointer" onclick="showLayoutSelection()">
             <div class="text-center z-20">
-                <h1 class="text-6xl md:text-8xl font-black tracking-tighter uppercase text-white pulse-text mb-4">Touch to Start</h1>
-                <p class="text-lg md:text-2xl text-gold-400 tracking-widest uppercase font-semibold">Step inside the photo frame</p>
+                <h1 class="text-7xl md:text-9xl font-black tracking-tight uppercase text-white pulse-text mb-6">Touch to Start</h1>
+                <p class="text-2xl text-gold-400 tracking-widest uppercase font-semibold">Step into the frame</p>
             </div>
         </div>
 
-        <div id="shoot-screen" class="absolute inset-0 z-10 flex flex-col items-center justify-center p-4 hidden">
-            <div class="relative w-full max-w-6xl h-[80vh] bg-black rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+        <!-- STAGE 2: LAYOUT SELECTOR -->
+        <div id="selection-screen" class="absolute inset-0 z-20 flex-col items-center justify-center bg-black/60 backdrop-blur-xl hidden">
+            <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-10 text-white drop-shadow-lg">Select Your Layout</h1>
+            <div class="flex gap-8 w-full max-w-4xl justify-center">
+                <!-- 1 Photo -->
+                <div class="glass-panel w-72 p-8 rounded-3xl flex flex-col items-center text-center transition transform hover:scale-105 hover:border-gold-500 cursor-pointer" onclick="startCameraSession(1)">
+                    <div class="w-32 h-48 bg-zinc-900 border-2 border-white rounded shadow-xl p-2 flex">
+                        <div class="w-full h-full bg-zinc-800 rounded"></div>
+                    </div>
+                    <h3 class="text-xl font-bold mt-6 text-white uppercase tracking-wider">1 Photo<br>Portrait</h3>
+                </div>
+                <!-- 3 Photo -->
+                <div class="glass-panel w-72 p-8 rounded-3xl flex flex-col items-center text-center transition transform hover:scale-105 hover:border-gold-500 cursor-pointer" onclick="startCameraSession(3)">
+                    <div class="w-32 h-48 bg-zinc-900 border-2 border-white rounded shadow-xl flex flex-col p-2 gap-1.5">
+                        <div class="flex-1 bg-zinc-800 rounded"></div>
+                        <div class="flex-1 bg-zinc-800 rounded"></div>
+                        <div class="flex-1 bg-zinc-800 rounded"></div>
+                    </div>
+                    <h3 class="text-xl font-bold mt-6 text-white uppercase tracking-wider">3 Photo<br>Strip</h3>
+                </div>
+            </div>
+            <button class="mt-12 text-zinc-400 font-bold uppercase hover:text-white" onclick="returnToStandby()">← Cancel</button>
+        </div>
+
+        <!-- STAGE 3: LIVE CAMERA -->
+        <div id="shoot-screen" class="absolute inset-0 z-10 flex flex-col items-center justify-center p-6 hidden">
+            <!-- Progress Indicators for 3-photo mode -->
+            <div id="capture-progress" class="flex gap-4 mb-4 hidden">
+                <div class="w-4 h-4 rounded-full border-2 border-white" id="prog-1"></div>
+                <div class="w-4 h-4 rounded-full border-2 border-white" id="prog-2"></div>
+                <div class="w-4 h-4 rounded-full border-2 border-white" id="prog-3"></div>
+            </div>
+
+            <div class="relative w-full max-w-5xl aspect-video bg-black rounded-3xl overflow-hidden border border-white/20 shadow-[0_0_50px_rgba(0,0,0,0.8)]">
                 <video id="booth-preview" class="w-full h-full object-cover scale-x-[-1]" autoplay playsinline></video>
                 
-                <div id="instruction-card" class="glass-panel absolute top-6 left-1/2 -translate-x-1/2 w-4/5 max-w-lg rounded-2xl p-5 text-center shadow-2xl hidden">
-                    <h2 id="instruction-text" class="text-2xl font-bold text-gold-400 drop-shadow-md">Look at the camera 👆</h2>
+                <div id="instruction-card" class="glass-panel absolute top-8 left-1/2 -translate-x-1/2 px-8 py-4 rounded-full shadow-2xl hidden">
+                    <h2 class="text-2xl font-bold text-gold-400 drop-shadow-md">Look at the camera 👆</h2>
                 </div>
                 
-                <div id="countdown-card" class="glass-panel absolute bottom-8 left-1/2 -translate-x-1/2 w-48 rounded-2xl py-6 text-center shadow-2xl hidden">
-                    <h1 id="countdown-text" class="text-7xl font-black text-gold-400 leading-none">Ready</h1>
+                <div id="countdown-card" class="absolute inset-0 flex items-center justify-center bg-black/40 hidden">
+                    <h1 id="countdown-text" class="text-[12rem] font-black text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] leading-none">3</h1>
                 </div>
             </div>
         </div>
 
-        <div id="selection-screen" class="absolute inset-0 z-10 flex flex-col items-center justify-center p-6 hidden">
-            <h1 class="text-3xl md:text-5xl font-black tracking-tight mb-12 text-center drop-shadow-md">Select Your Print Layout</h1>
+        <!-- STAGE 4: REVIEW & FILTER STUDIO -->
+        <div id="review-screen" class="absolute inset-0 z-30 bg-zinc-950 flex flex-row items-center justify-center p-6 gap-8 hidden">
             
-            <div class="flex flex-col md:flex-row gap-8 w-full max-w-4xl justify-center items-stretch">
-                <div class="glass-panel flex-1 max-w-md p-8 rounded-3xl flex flex-col items-center justify-between text-center transition hover:-translate-y-2 hover:border-gold-500/40 cursor-pointer" onclick="finalizeLayoutSelection(1)">
-                    <div class="w-44 h-60 bg-[#0d0d10] border-4 border-white rounded-lg shadow-2xl p-3 flex">
-                        <div class="w-full h-full bg-gradient-to-br from-white/5 to-white/10 rounded"></div>
-                    </div>
-                    <h3 class="text-2xl font-bold mt-6 text-white">Photo Frame</h3>
+            <!-- Left: Live Canvas Preview -->
+            <div class="w-1/2 h-full flex flex-col items-center justify-center p-4">
+                <div class="relative w-full h-full max-h-[85vh] flex items-center justify-center rounded-2xl bg-zinc-900 border border-zinc-800 shadow-[0_0_40px_rgba(0,0,0,0.6)] p-2">
+                    <img id="final-preview-image" class="max-w-full max-h-full object-contain drop-shadow-2xl rounded-sm" src="" alt="Preview">
                 </div>
+            </div>
+
+            <!-- Right: Filters & Done -->
+            <div class="w-[400px] h-full flex flex-col justify-center">
+                <h2 class="text-4xl font-black text-white mb-2 tracking-tight">Review & Edit</h2>
+                <p class="text-zinc-400 font-medium mb-10 uppercase tracking-widest text-sm">Select a color filter</p>
                 
-                <div class="glass-panel flex-1 max-w-md p-8 rounded-3xl flex flex-col items-center justify-between text-center transition hover:-translate-y-2 hover:border-gold-500/40 cursor-pointer" onclick="finalizeLayoutSelection(3)">
-                    <div class="w-32 h-60 bg-[#0d0d10] border-4 border-white rounded-lg shadow-2xl flex flex-col p-3 gap-1.5">
-                        <div class="flex-1 bg-gradient-to-br from-white/5 to-white/10 rounded"></div>
-                        <div class="flex-1 bg-gradient-to-br from-white/5 to-white/10 rounded"></div>
-                        <div class="flex-1 bg-gradient-to-br from-white/5 to-white/10 rounded"></div>
-                    </div>
-                    <h3 class="text-2xl font-bold mt-6 text-white">Photo Strip</h3>
+                <div class="space-y-4 mb-12 w-full">
+                    <button class="filter-btn active w-full glass-panel border border-zinc-700 rounded-2xl p-5 flex items-center justify-between transition group" onclick="applyFilter('normal', this)">
+                        <span class="text-xl font-bold text-white group-hover:text-gold-400">Normal</span>
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-400 to-rose-400"></div>
+                    </button>
+                    <button class="filter-btn w-full glass-panel border border-zinc-700 rounded-2xl p-5 flex items-center justify-between transition group" onclick="applyFilter('bw', this)">
+                        <span class="text-xl font-bold text-white group-hover:text-gold-400">Black & White</span>
+                        <div class="w-10 h-10 rounded-full bg-zinc-400 grayscale"></div>
+                    </button>
+                    <button class="filter-btn w-full glass-panel border border-zinc-700 rounded-2xl p-5 flex items-center justify-between transition group" onclick="applyFilter('vintage', this)">
+                        <span class="text-xl font-bold text-white group-hover:text-gold-400">Vintage Warm</span>
+                        <div class="w-10 h-10 rounded-full bg-[#d4b08c]"></div>
+                    </button>
+                </div>
+
+                <div class="flex gap-4 w-full mt-auto">
+                    <button class="flex-1 py-5 bg-zinc-800 text-white font-bold rounded-2xl text-lg uppercase tracking-wider hover:bg-zinc-700 transition" onclick="returnToStandby()">
+                        Retake
+                    </button>
+                    <button class="flex-[2] py-5 bg-gold-500 text-black font-black rounded-2xl text-lg uppercase tracking-wider hover:bg-gold-400 transition shadow-[0_0_25px_rgba(202,163,102,0.4)]" onclick="finalizeAndSave()">
+                        Done ✓
+                    </button>
                 </div>
             </div>
         </div>
 
-        <div id="share-screen" class="absolute inset-0 z-10 flex flex-col items-center justify-center p-6 hidden">
-            <div class="glass-panel w-full max-w-xl rounded-3xl p-12 text-center shadow-2xl border border-white/10">
-                <h2 id="save-status-headline" class="text-3xl font-extrabold tracking-tight text-white mb-4">Saving to USB Storage...</h2>
-                <p class="text-gold-400 font-semibold text-lg">Please wait a moment.</p>
-                <div class="mt-8 text-6xl">💾</div>
+        <!-- STAGE 5: SAVING -->
+        <div id="share-screen" class="absolute inset-0 z-40 flex flex-col items-center justify-center p-6 bg-black/80 backdrop-blur-xl hidden">
+            <div class="glass-panel w-full max-w-xl rounded-3xl p-12 text-center border border-gold-500/30">
+                <h2 id="save-status-headline" class="text-4xl font-black tracking-tight text-white mb-4">Saving to USB...</h2>
+                <p class="text-gold-400 font-bold text-xl uppercase tracking-widest animate-pulse">Please wait</p>
+                <div class="mt-10 text-6xl">💾</div>
             </div>
         </div>
     </div>
@@ -203,41 +246,35 @@
         let eventName = "Wedding";
         let currentCount = 1;
         let selectedCameraId = "";
-        let currentTemplate = 1;
+        let currentTemplate = 1; // 1 or 3
         let capturedImages = [];
         let localStream = null;
+        
+        let currentFilterCode = 'none';
 
-        // Native File System API Handles
+        // Filter Dictionary
+        const CSS_FILTERS = {
+            'normal': 'none',
+            'bw': 'grayscale(100%)',
+            'vintage': 'sepia(60%) contrast(110%) saturate(110%) hue-rotate(-10deg)'
+        };
+
+        // File System Handles
         let usbDirHandle = null;
         let rawDirHandle = null;
         let editedDirHandle = null;
 
-        // Dynamic Assets
+        // Assets
         const singleFrameImg = new Image();
         const tripleFrameImg = new Image();
         let singleFrameLoaded = false;
         let tripleFrameLoaded = false;
-        let customBgDataUrl = null;
 
         window.onload = function() {
-            restoreConfigurationState();
             enumerateSystemCameras();
             setupFileListeners();
+            if(localStorage.getItem('booth_session_seq_id')) currentCount = parseInt(localStorage.getItem('booth_session_seq_id'));
         };
-
-        function restoreConfigurationState() {
-            if (localStorage.getItem('booth_event_name')) {
-                document.getElementById('event-name-input').value = localStorage.getItem('booth_event_name');
-            }
-            if (localStorage.getItem('booth_session_seq_id')) {
-                document.getElementById('counter-input').value = localStorage.getItem('booth_session_seq_id');
-                currentCount = parseInt(localStorage.getItem('booth_session_seq_id'));
-            }
-            if (localStorage.getItem('booth_custom_backdrop')) {
-                customBgDataUrl = localStorage.getItem('booth_custom_backdrop');
-                document.getElementById('master-blur-bg').style.backgroundImage = `url('${customBgDataUrl}')`;
-            }
-        }
 
         async function enumerateSystemCameras() {
             const select = document.getElementById('camera-select');
@@ -245,15 +282,12 @@
                 await navigator.mediaDevices.getUserMedia({ video: true });
                 const devices = await navigator.mediaDevices.enumerateDevices();
                 const videoDevices = devices.filter(d => d.kind === 'videoinput');
-                
                 select.innerHTML = '';
                 videoDevices.forEach((device, index) => {
                     const option = document.createElement('option');
                     option.value = device.deviceId;
                     option.text = device.label || `Camera ${index + 1}`;
-                    if (device.label.toLowerCase().includes('dji') || device.label.toLowerCase().includes('uvc')) {
-                        option.selected = true;
-                    }
+                    if (device.label.toLowerCase().includes('uvc') || device.label.toLowerCase().includes('dji')) option.selected = true;
                     select.appendChild(option);
                 });
             } catch (err) {
@@ -262,275 +296,45 @@
         }
 
         function setupFileListeners() {
-            document.getElementById('single-frame-input').addEventListener('change', function(e) {
-                if (e.target.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = (event) => { singleFrameImg.onload = () => { singleFrameLoaded = true; }; singleFrameImg.src = event.target.result; }
-                    reader.readAsDataURL(e.target.files[0]);
-                }
+            document.getElementById('single-frame-input').addEventListener('change', e => {
+                if (e.target.files[0]) { const r = new FileReader(); r.onload = ev => { singleFrameImg.onload = () => singleFrameLoaded = true; singleFrameImg.src = ev.target.result; }; r.readAsDataURL(e.target.files[0]); }
             });
-
-            document.getElementById('triple-frame-input').addEventListener('change', function(e) {
-                if (e.target.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = (event) => { tripleFrameImg.onload = () => { tripleFrameLoaded = true; }; tripleFrameImg.src = event.target.result; }
-                    reader.readAsDataURL(e.target.files[0]);
-                }
+            document.getElementById('triple-frame-input').addEventListener('change', e => {
+                if (e.target.files[0]) { const r = new FileReader(); r.onload = ev => { tripleFrameImg.onload = () => tripleFrameLoaded = true; tripleFrameImg.src = ev.target.result; }; r.readAsDataURL(e.target.files[0]); }
             });
-
-            document.getElementById('bg-file-input').addEventListener('change', function(e) {
-                if (e.target.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = (event) => {
-                        customBgDataUrl = event.target.result;
-                        document.getElementById('master-blur-bg').style.backgroundImage = `url('${customBgDataUrl}')`;
-                        try { localStorage.setItem('booth_custom_backdrop', customBgDataUrl); } catch(err){}
-                    }
-                    reader.readAsDataURL(e.target.files[0]);
-                }
+            document.getElementById('bg-file-input').addEventListener('change', e => {
+                if (e.target.files[0]) { const r = new FileReader(); r.onload = ev => { document.getElementById('master-blur-bg').style.backgroundImage = `url('${ev.target.result}')`; }; r.readAsDataURL(e.target.files[0]); }
             });
         }
 
-        // --- NATIVE USB FILE SYSTEM LOGIC ---
         async function handleLocalDirClick(e) {
-            if (e) e.preventDefault();
+            e.preventDefault();
             try {
-                if (!window.showDirectoryPicker) {
-                    triggerAlertModal("Browser Limitation", "Your browser does not support local saving. Use Chrome or Edge.");
-                    return;
-                }
-                // Request the main USB directory
+                if (!window.showDirectoryPicker) { triggerAlertModal("Browser Limitation", "Use Chrome to map USB folders."); return; }
                 usbDirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
-                
-                // Instantly create/verify the 'raw' and 'edited' subdirectories
                 rawDirHandle = await usbDirHandle.getDirectoryHandle('raw', { create: true });
                 editedDirHandle = await usbDirHandle.getDirectoryHandle('edited', { create: true });
-
-                const statusText = document.getElementById('local-dir-status');
-                statusText.innerText = `✅ USB Mapped successfully: /${usbDirHandle.name}`;
-                statusText.classList.remove('text-red-400');
-                statusText.classList.add('text-emerald-400');
-            } catch (err) {
-                if (err.name !== 'AbortError') triggerAlertModal("USB Backup Failure", err.message);
-            }
+                const st = document.getElementById('local-dir-status');
+                st.innerText = `✅ USB Mapped: /${usbDirHandle.name}`;
+                st.classList.replace('text-red-400', 'text-emerald-400');
+            } catch (err) { if (err.name !== 'AbortError') triggerAlertModal("USB Error", err.message); }
         }
 
-        async function saveToUSBStorage(base64Data, fileName, isRawFolder) {
-            if (!usbDirHandle) return;
-            try {
-                const targetDir = isRawFolder ? rawDirHandle : editedDirHandle;
-                
-                // Convert Base64 to binary Blob
-                const byteCharacters = atob(base64Data);
-                const byteNumbers = new Array(byteCharacters.length);
-                for (let i = 0; i < byteCharacters.length; i++) {
-                    byteNumbers[i] = byteCharacters.charCodeAt(i);
-                }
-                const byteArray = new Uint8Array(byteNumbers);
-                const blob = new Blob([byteArray], { type: 'image/jpeg' });
-
-                // Write file to the specific subfolder
-                const fileHandle = await targetDir.getFileHandle(fileName, { create: true });
-                const writable = await fileHandle.createWritable();
-                await writable.write(blob);
-                await writable.close();
-            } catch (err) {
-                console.error("USB Write Failed for " + fileName, err);
-            }
-        }
-        // ------------------------------------
-
-        function triggerAlertModal(title, message) {
-            document.getElementById('alert-title').innerText = title;
-            document.getElementById('alert-message').innerText = message;
-            document.getElementById('booth-alert-modal').classList.remove('hidden');
-        }
-
+        function triggerAlertModal(t, m) { document.getElementById('alert-title').innerText = t; document.getElementById('alert-message').innerText = m; document.getElementById('booth-alert-modal').classList.remove('hidden'); }
         function closeAlertModal() { document.getElementById('booth-alert-modal').classList.add('hidden'); }
 
-        function triggerFullscreen() {
-            const docEl = document.documentElement;
-            if (docEl.requestFullscreen) docEl.requestFullscreen().catch(()=>{});
-            else if (docEl.webkitRequestFullscreen) docEl.webkitRequestFullscreen();
-        }
+        function triggerFullscreen() { const d = document.documentElement; if(d.requestFullscreen) d.requestFullscreen().catch(()=>{}); }
 
         function lockAndInitBooth() {
-            if (!usbDirHandle) {
-                triggerAlertModal("USB Not Selected", "Please select a target USB folder first. This system operates 100% offline and needs a place to save files.");
-                return;
-            }
-
-            const inputName = document.getElementById('event-name-input').value.trim();
-            eventName = inputName ? inputName.replace(/\s+/g, '_') : "Wedding";
-            localStorage.setItem('booth_event_name', eventName);
-            
+            if (!usbDirHandle) { triggerAlertModal("USB Required", "Please select a USB folder first."); return; }
+            eventName = document.getElementById('event-name-input').value.trim().replace(/\s+/g, '_') || "Wedding";
             selectedCameraId = document.getElementById('camera-select').value;
             currentCount = parseInt(document.getElementById('counter-input').value) || 1;
-            localStorage.setItem('booth_session_seq_id', currentCount);
-
+            
             triggerFullscreen();
             document.getElementById('setup-screen').classList.add('hidden');
             document.getElementById('app-wrapper').classList.remove('hidden');
         }
 
-        async function initiateUserSession() {
-            document.getElementById('idle-screen').classList.add('hidden');
-            document.getElementById('shoot-screen').classList.remove('hidden');
-            capturedImages = [];
-
-            try {
-                const constraints = { video: { width: { ideal: 1920 }, height: { ideal: 1080 } } };
-                if (selectedCameraId) constraints.video.deviceId = { exact: selectedCameraId };
-
-                localStream = await navigator.mediaDevices.getUserMedia(constraints);
-                document.getElementById('booth-preview').srcObject = localStream;
-                
-                setTimeout(runShutterSequence, 1500);
-            } catch (err) {
-                triggerAlertModal("Camera Error", "Could not mount camera feed.");
-                returnToStandby();
-            }
-        }
-
-        function runShutterSequence() {
-            const instCard = document.getElementById('instruction-card');
-            const countCard = document.getElementById('countdown-card');
-            const countText = document.getElementById('countdown-text');
-
-            instCard.classList.remove('hidden');
-            countCard.classList.add('hidden');
-
-            setTimeout(() => {
-                instCard.classList.add('hidden');
-                countText.innerText = "Ready";
-                countCard.classList.remove('hidden');
-
-                let count = 3;
-                let cTimer = setInterval(() => {
-                    if (count > 0) {
-                        countText.innerText = count;
-                        count--;
-                    } else {
-                        clearInterval(cTimer);
-                        countCard.classList.add('hidden');
-                        executeFlashAndCapture();
-                    }
-                }, 1000);
-            }, 2000);
-        }
-
-        function executeFlashAndCapture() {
-            const flash = document.getElementById('flash-screen');
-            flash.classList.add('fire', 'flash-fire');
-
-            const video = document.getElementById('booth-preview');
-            const canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            const ctx = canvas.getContext('2d');
-            
-            ctx.translate(canvas.width, 0);
-            ctx.scale(-1, 1);
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            const img = new Image();
-            img.src = canvas.toDataURL('image/jpeg', 0.95);
-            capturedImages.push(img);
-
-            setTimeout(() => {
-                flash.classList.remove('fire', 'flash-fire');
-                if (capturedImages.length < 3) {
-                    setTimeout(runShutterSequence, 1200);
-                } else {
-                    if (localStream) localStream.getTracks().forEach(t => t.stop());
-                    document.getElementById('shoot-screen').classList.add('hidden');
-                    document.getElementById('selection-screen').classList.remove('hidden');
-                }
-            }, 300);
-        }
-
-        function finalizeLayoutSelection(templateId) {
-            currentTemplate = templateId;
-            document.getElementById('selection-screen').classList.add('hidden');
-            document.getElementById('share-screen').classList.remove('hidden');
-            processOutputsAndSaveLocal();
-        }
-
-        function drawImageCover(ctx, img, dstX, dstY, dstW, dstH) {
-            const imgRatio = img.width / img.height;
-            const dstRatio = dstW / dstH;
-            let srcX = 0, srcY = 0, srcW = img.width, srcH = img.height;
-            
-            if (imgRatio > dstRatio) {
-                srcW = img.height * dstRatio;
-                srcX = (img.width - srcW) / 2;
-            } else {
-                srcH = img.width / dstRatio;
-                srcY = (img.height - srcH) / 2;
-            }
-            ctx.drawImage(img, srcX, srcY, srcW, srcH, dstX, dstY, dstW, dstH);
-        }
-
-        async function processOutputsAndSaveLocal() {
-            const statusLabel = document.getElementById('save-status-headline');
-            const dateStr = new Date().toISOString().split('T')[0];
-            const paddedCount = String(currentCount).padStart(3, '0');
-
-            // 1. SAVE RAW PHOTOS (To 'raw' folder)
-            statusLabel.innerText = "Saving RAW captures...";
-            for (let i = 0; i < capturedImages.length; i++) {
-                const base64Data = capturedImages[i].src.split(',')[1];
-                const rawName = `${dateStr}_${eventName}_${paddedCount}_${i + 1}.jpg`;
-                await saveToUSBStorage(base64Data, rawName, true); // true = raw folder
-            }
-
-            // 2. STITCH & SAVE FRAMED PHOTOS (To 'edited' folder)
-            statusLabel.innerText = "Assembling Frames...";
-            if (currentTemplate === 1) {
-                for (let i = 0; i < capturedImages.length; i++) {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    canvas.width = 1200; canvas.height = 1800;
-
-                    drawImageCover(ctx, capturedImages[i], 0, 0, canvas.width, canvas.height);
-                    if (singleFrameLoaded) ctx.drawImage(singleFrameImg, 0, 0, canvas.width, canvas.height);
-
-                    const fileName = `${dateStr}_${eventName}_pframe_${paddedCount}_${i + 1}.jpg`;
-                    const base64Data = canvas.toDataURL('image/jpeg', 0.90).split(',')[1];
-                    await saveToUSBStorage(base64Data, fileName, false); // false = edited folder
-                }
-            } else if (currentTemplate === 3) {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                canvas.width = 1200; canvas.height = 1800;
-                ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, 1200, 1800);
-
-                const positionsY = [100, 650, 1200];
-                for (let i = 0; i < 3; i++) {
-                    drawImageCover(ctx, capturedImages[i], 150, positionsY[i], 900, 500);
-                }
-                
-                if (tripleFrameLoaded) ctx.drawImage(tripleFrameImg, 0, 0, 1200, 1800);
-
-                const fileName = `${dateStr}_${eventName}_pstrip_${paddedCount}.jpg`;
-                const base64Data = canvas.toDataURL('image/jpeg', 0.90).split(',')[1];
-                await saveToUSBStorage(base64Data, fileName, false); // false = edited folder
-            }
-
-            // 3. FINISH SESSION
-            currentCount++;
-            localStorage.setItem('booth_session_seq_id', currentCount);
-
-            statusLabel.innerText = "Saved successfully!";
-            setTimeout(returnToStandby, 3500);
-        }
-
-        function returnToStandby() {
-            if (localStream) localStream.getTracks().forEach(t => t.stop());
-            document.getElementById('share-screen').classList.add('hidden');
-            document.getElementById('save-status-headline').innerText = "Saving to USB Storage...";
-            document.getElementById('idle-screen').classList.remove('hidden');
-        }
-    </script>
-</body>
-</html>
+        function showLayoutSelection() {
+            docum
