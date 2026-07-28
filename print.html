@@ -1,148 +1,370 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VibeShoot - AlphaV</title>
-    <!-- Tailwind CSS for high-fidelity layouts -->
+    <title>Allen & Marry | Botanical Framer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .glass-panel {
-            background: rgba(18, 18, 24, 0.75);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        .checkerboard {
+            background-color: #18181b;
+            background-image:  radial-gradient(#3f3f46 0.5px, transparent 0.5px), radial-gradient(#3f3f46 0.5px, #18181b 0.5px);
+            background-size: 20px 20px;
+            background-position: 0 0,10px 10px;
         }
-        .gold-glow {
-            box-shadow: 0 0 30px rgba(202, 163, 102, 0.15);
+        /* Custom Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: #3f3f46;
+            border-radius: 5px;
+            outline: none;
         }
-        /* Custom styled frames representing canvas rendering */
-        .keepsake-border {
-            border: 14px solid #caa366;
-            outline: 2px solid #ffffff;
-            outline-offset: -12px;
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #caa366;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #18181b;
+            transition: transform 0.1s;
         }
-        .strip-shadow {
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
         }
     </style>
 </head>
-<body class="bg-[#08080b] text-white min-h-screen font-sans flex flex-col justify-between">
+<body class="bg-zinc-950 text-white min-h-screen p-6 font-sans">
 
-    <!-- HEADER BRANDING -->
-    <header class="w-full border-b border-zinc-900 py-6 px-8 flex justify-between items-center z-10 bg-[#0c0c10]/80 sticky top-0 backdrop-blur-md">
-        <div class="flex items-center gap-3">
-            <span class="text-2xl font-black tracking-tight text-white">VibeShoot <span class="text-gold-400">Photobooth</span></span>
-            <span class="text-xs font-bold bg-gold-500/10 text-gold-400 px-2.5 py-1 rounded-full border border-gold-500/20">Output Renderer</span>
-        </div>
-        <div class="text-zinc-500 text-xs font-mono">AlphaV Application : v1.0.3</div>
-    </header>
-
-    <!-- MAIN DISPLAY HUB -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-6 md:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        <!-- CONTROL BAR & INFO (3 columns) -->
-        <div class="lg:col-span-4 space-y-6">
-            <div class="glass-panel p-6 rounded-3xl space-y-4">
-                <h3 class="text-lg font-bold text-gold-400">Portrait Rendering Engine</h3>
-                <p class="text-zinc-400 text-sm leading-relaxed">
-                    This preview shows how raw landscape camera frames are automatically processed, cropped vertically, and saved directly to your Google Drive and local USB folders.
-                </p>
-                <div class="space-y-2 text-xs text-zinc-500 font-mono">
-                    <div class="flex justify-between border-b border-zinc-900 pb-1">
-                        <span>Event Name:</span>
-                        <span class="text-white">Wedding</span>
-                    </div>
-                    <div class="flex justify-between border-b border-zinc-900 pb-1">
-                        <span>Session Count:</span>
-                        <span class="text-white">014</span>
-                    </div>
-                    <div class="flex justify-between border-b border-zinc-900 pb-1">
-                        <span>Target Resolution:</span>
-                        <span class="text-white">1200 x 1800 px</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span>File Encoding:</span>
-                        <span class="text-emerald-400 font-bold">JPEG (90% Quality)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ASSET LEGEND -->
-            <div class="glass-panel p-6 rounded-3xl space-y-3 text-sm">
-                <h4 class="font-bold text-white mb-2">Folder Distribution Map</h4>
-                <div class="flex gap-3 items-start">
-                    <div class="p-2 bg-zinc-900 rounded-lg text-lg">📁</div>
-                    <div>
-                        <div class="font-bold text-zinc-300">Folder 1 (RAW)</div>
-                        <div class="text-xs text-zinc-500 mt-0.5">Stores the 3 landscape originals directly: <br><span class="font-mono text-zinc-400">2026-06-11_Wedding_014_1.jpg</span></div>
-                    </div>
-                </div>
-                <div class="flex gap-3 items-start pt-2">
-                    <div class="p-2 bg-gold-950/20 text-gold-400 rounded-lg text-lg">🖼️</div>
-                    <div>
-                        <div class="font-bold text-gold-400">Folder 2 (FRAMED)</div>
-                        <div class="text-xs text-zinc-500 mt-0.5">Stores selected compiled overlays: <br><span class="font-mono text-zinc-400">2026-06-11_Wedding_pstrip_014.jpg</span></div>
-                    </div>
-                </div>
-            </div>
+    <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-[#faecec] tracking-tight mb-2">Spring Garden Botanical</h1>
+            <p class="text-[#93a897] font-medium tracking-widest uppercase text-sm">Allen & Marry Wedding Preview</p>
         </div>
 
-        <!-- OUTPUT PREVIEWS (8 columns) -->
-        <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
+        <!-- TABS -->
+        <div class="flex justify-center gap-4 mb-8">
+            <button onclick="switchTab('single')" id="tab-single" class="px-6 py-2 rounded-full font-bold bg-[#caa366] text-black shadow-[0_0_15px_rgba(202,163,102,0.4)] transition">1-Photo Garden Frame</button>
+            <button onclick="switchTab('strip')" id="tab-strip" class="px-6 py-2 rounded-full font-bold bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition">3-Photo Botanical Strip</button>
+        </div>
+
+        <!-- SINGLE FRAME SECTION -->
+        <div id="section-single" class="flex flex-col md:flex-row gap-8 items-start justify-center">
+            <div class="w-full md:w-1/2 bg-zinc-900 p-6 rounded-2xl border border-zinc-800 shadow-xl">
+                <h2 class="text-lg font-bold mb-4 text-[#caa366] uppercase tracking-wider">1. Photo Source</h2>
+                <p class="text-xs text-zinc-400 mb-2">Your photo has been pre-loaded! Or upload a new one:</p>
+                <input type="file" id="upload-single" accept="image/jpeg, image/png, image/webp" class="block w-full text-sm text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#93a897] file:text-black hover:file:bg-[#7a8f7e] mb-8 cursor-pointer transition">
+                
+                <h2 class="text-lg font-bold mb-4 text-[#caa366] uppercase tracking-wider">2. Frame Adjustments</h2>
+                
+                <div class="mb-5">
+                    <div class="flex justify-between text-xs text-zinc-400 mb-2 font-medium">
+                        <label for="zoom-single">Zoom / Scale</label>
+                        <span>1.0x - 2.5x</span>
+                    </div>
+                    <input type="range" id="zoom-single" min="1" max="2.5" step="0.05" value="1" class="w-full">
+                </div>
+
+                <div class="mb-8">
+                    <div class="flex justify-between text-xs text-zinc-400 mb-2 font-medium">
+                        <label for="offset-single">Move Up / Down</label>
+                    </div>
+                    <input type="range" id="offset-single" min="-600" max="600" value="0" class="w-full">
+                </div>
+
+                <button onclick="downloadCanvas('canvas-single', 'Allen_Marry_Garden_Frame.jpg')" class="w-full py-4 bg-gradient-to-r from-[#faecec] to-[#f4dada] text-[#6d452b] font-extrabold uppercase tracking-widest rounded-xl hover:scale-[1.02] shadow-[0_4px_20px_rgba(250,236,236,0.15)] transition duration-200">
+                    📥 Download Framed Photo
+                </button>
+            </div>
             
-            <!-- COLUMN 1: THE COMPILED PHOTO STRIP -->
-            <div class="space-y-4 flex flex-col items-center">
-                <span class="text-xs font-bold text-zinc-400 tracking-widest uppercase">Compiled Photo Strip Output</span>
-                
-                <!-- Physical Photo Strip Simulation -->
-                <div class="keepsake-border strip-shadow w-[290px] h-[435px] bg-white flex flex-col justify-around p-3.5 relative overflow-hidden transition-all duration-300 hover:scale-[1.02] gold-glow">
-                    <!-- Grid background mimicking high quality print card -->
-                    <div class="absolute inset-0 bg-neutral-50/10 pointer-events-none"></div>
-                    
-                    <!-- 3 Vertical Photo Slots with Landscape Cover Crop -->
-                    <div class="w-full h-[120px] overflow-hidden rounded-sm shadow-inner relative">
-                        <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover">
-                    </div>
-                    
-                    <div class="w-full h-[120px] overflow-hidden rounded-sm shadow-inner relative">
-                        <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover">
-                    </div>
-                    
-                    <div class="w-full h-[120px] overflow-hidden rounded-sm shadow-inner relative">
-                        <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover">
-                    </div>
+            <div class="w-full md:w-1/2 flex justify-center">
+                <div class="relative w-[320px] h-[480px] checkerboard rounded-xl overflow-hidden shadow-2xl border border-zinc-700">
+                    <canvas id="canvas-single" width="1200" height="1800" class="w-full h-full object-contain"></canvas>
                 </div>
-                
-                <span class="text-xs text-zinc-500 font-mono">Aspect Ratio: 2:3 Vertical Strip</span>
             </div>
-
-            <!-- COLUMN 2: SINGLE PHOTO FRAME PORTRAIT -->
-            <div class="space-y-4 flex flex-col items-center">
-                <span class="text-xs font-bold text-zinc-400 tracking-widest uppercase">Single Photo Frame Output</span>
-                
-                <!-- Single Frame Simulation -->
-                <div class="keepsake-border strip-shadow w-[290px] h-[435px] bg-zinc-950 relative overflow-hidden transition-all duration-300 hover:scale-[1.02] gold-glow flex flex-col justify-end">
-                    
-                    <!-- Centered Cropped Image covering the canvas -->
-                    <div class="absolute inset-0 z-1">
-                        <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200" class="w-full h-full object-cover">
-                    </div>
-                    
-                    <!-- Embedded Solid Frame Overlay details (CSS Simulation of custom PNG layer) -->
-                    <div class="absolute inset-0 border-[16px] border-amber-900/10 pointer-events-none z-10"></div>
-                </div>
-                
-                <span class="text-xs text-zinc-500 font-mono">Aspect Ratio: 2:3 Single Portrait</span>
-            </div>
-
         </div>
-    </main>
 
-    <!-- FOOTER SIGNATURE -->
-    <footer class="w-full border-t border-zinc-900 py-6 text-center text-zinc-600 text-xs bg-[#050507]/90 mt-8">
-        AlphaV Photobooth Renderer Platform • All Rights Reserved
-    </footer>
+        <!-- TRIPLE STRIP SECTION -->
+        <div id="section-strip" class="hidden flex-col md:flex-row gap-8 items-start justify-center">
+            <div class="w-full md:w-1/2 bg-zinc-900 p-6 rounded-2xl border border-zinc-800 shadow-xl">
+                <h2 class="text-lg font-bold mb-4 text-[#caa366] uppercase tracking-wider">Configure Strip</h2>
+                <p class="text-xs text-zinc-400 mb-4">We pre-loaded your image into all 3 slots. Swap them below:</p>
+                
+                <div class="space-y-4 mb-8">
+                    <div class="bg-zinc-950 p-3 rounded-lg border border-zinc-800">
+                        <label class="text-[10px] font-bold text-[#93a897] uppercase tracking-wider mb-1 block">Top Frame</label>
+                        <input type="file" id="upload-strip-1" class="block w-full text-xs text-zinc-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:bg-zinc-800 file:text-white hover:file:bg-zinc-700 cursor-pointer">
+                    </div>
+                    <div class="bg-zinc-950 p-3 rounded-lg border border-zinc-800">
+                        <label class="text-[10px] font-bold text-[#93a897] uppercase tracking-wider mb-1 block">Middle Frame</label>
+                        <input type="file" id="upload-strip-2" class="block w-full text-xs text-zinc-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:bg-zinc-800 file:text-white hover:file:bg-zinc-700 cursor-pointer">
+                    </div>
+                    <div class="bg-zinc-950 p-3 rounded-lg border border-zinc-800">
+                        <label class="text-[10px] font-bold text-[#93a897] uppercase tracking-wider mb-1 block">Bottom Frame</label>
+                        <input type="file" id="upload-strip-3" class="block w-full text-xs text-zinc-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:bg-zinc-800 file:text-white hover:file:bg-zinc-700 cursor-pointer">
+                    </div>
+                </div>
 
+                <button onclick="downloadCanvas('canvas-strip', 'Allen_Marry_Garden_Strip.jpg')" class="w-full py-4 bg-gradient-to-r from-[#faecec] to-[#f4dada] text-[#6d452b] font-extrabold uppercase tracking-widest rounded-xl hover:scale-[1.02] shadow-[0_4px_20px_rgba(250,236,236,0.15)] transition duration-200">
+                    📥 Download Photo Strip
+                </button>
+            </div>
+
+            <div class="w-full md:w-1/2 flex justify-center">
+                <div class="relative w-[320px] h-[480px] checkerboard rounded-xl overflow-hidden shadow-2xl border border-zinc-700">
+                    <canvas id="canvas-strip" width="1200" height="1800" class="w-full h-full object-contain"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- SVG TEMPLATES WITH BOTANICAL ART ---
+        const singleSVG = `
+        <svg viewBox="0 0 1200 1800" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <!-- Blush Flower -->
+                <g id="blush-flower">
+                    <circle cx="-15" cy="-15" r="18" fill="#f4dada" opacity="0.9"/>
+                    <circle cx="15" cy="-15" r="18" fill="#faecec" opacity="0.9"/>
+                    <circle cx="-15" cy="15" r="18" fill="#faecec" opacity="0.9"/>
+                    <circle cx="15" cy="15" r="18" fill="#f4dada" opacity="0.9"/>
+                    <circle cx="0" cy="0" r="10" fill="#caa366"/>
+                </g>
+                <!-- Sage Leaf -->
+                <g id="sage-leaf">
+                    <path d="M0,0 C-20,-30 0,-60 30,-60 C60,-30 30,-10 0,0 Z" fill="#93a897" opacity="0.85"/>
+                </g>
+                <!-- Gold Vine -->
+                <g id="gold-vine">
+                    <path d="M0,0 Q30,-40 0,-80 T0,-160" fill="none" stroke="#caa366" stroke-width="4"/>
+                </g>
+            </defs>
+
+            <!-- Transparent Image Area -->
+            <rect width="1200" height="1800" fill="none" />
+            
+            <!-- Outer Double Frame -->
+            <rect x="40" y="40" width="1120" height="1720" fill="none" stroke="#caa366" stroke-width="8" />
+            <rect x="60" y="60" width="1080" height="1680" fill="none" stroke="#93a897" stroke-width="2" opacity="0.6"/>
+
+            <!-- Elegant Cream Base for Text -->
+            <path d="M 0 1450 Q 600 1420 1200 1450 V 1800 H 0 Z" fill="#fdfbf7" opacity="0.97" />
+            
+            <!-- Botanical Placements -->
+            <!-- Top Left -->
+            <g transform="translate(60, 60)">
+                <use href="#gold-vine" transform="rotate(135)" />
+                <use href="#sage-leaf" transform="rotate(110) scale(0.8)" />
+                <use href="#blush-flower" transform="translate(20, 20) scale(0.8)" />
+            </g>
+            
+            <!-- Top Right -->
+            <g transform="translate(1140, 60)">
+                <use href="#gold-vine" transform="rotate(-135)" />
+                <use href="#sage-leaf" transform="rotate(-110) scale(0.8)" />
+                <use href="#blush-flower" transform="translate(-20, 20) scale(0.8)" />
+            </g>
+
+            <!-- Bottom Center Floral Cluster -->
+            <g transform="translate(600, 1420)">
+                <use href="#sage-leaf" transform="rotate(-45) translate(-40, 0) scale(0.7)" />
+                <use href="#sage-leaf" transform="rotate(45) translate(40, 0) scale(0.7)" />
+                <use href="#blush-flower" />
+            </g>
+
+            <!-- Typography -->
+            <text x="600" y="1600" font-family="'Times New Roman', serif" font-weight="normal" font-size="80" fill="#caa366" text-anchor="middle" letter-spacing="6">Allen &amp; Marry</text>
+            <text x="600" y="1680" font-family="'Arial', sans-serif" font-weight="bold" font-size="28" fill="#93a897" text-anchor="middle" letter-spacing="10">SEPTEMBER 08, 2026</text>
+            <text x="600" y="1740" font-family="'Times New Roman', serif" font-style="italic" font-size="32" fill="#888" text-anchor="middle" letter-spacing="2">A Beautiful Beginning</text>
+        </svg>`;
+
+        const tripleSVG = `
+        <svg viewBox="0 0 1200 1800" xmlns="http://www.w3.org/2000/svg">
+            <!-- Warm Blush Canvas -->
+            <path d="M0,0 H1200 V1800 H0 Z 
+                     M150,150 h900 v460 h-900 Z 
+                     M150,670 h900 v460 h-900 Z 
+                     M150,1190 h900 v460 h-900 Z" 
+                  fill="#fdfbf7" fill-rule="evenodd" />
+            
+            <!-- Sleek Sage Photo Borders -->
+            <rect x="146" y="146" width="908" height="468" fill="none" stroke="#93a897" stroke-width="4" />
+            <rect x="146" y="666" width="908" height="468" fill="none" stroke="#93a897" stroke-width="4" />
+            <rect x="146" y="1186" width="908" height="468" fill="none" stroke="#93a897" stroke-width="4" />
+
+            <!-- Outer Gold Border -->
+            <rect x="30" y="30" width="1140" height="1740" fill="none" stroke="#caa366" stroke-width="8" />
+
+            <!-- Simple Header -->
+            <text x="600" y="100" font-family="'Arial', sans-serif" font-weight="bold" font-size="28" fill="#caa366" text-anchor="middle" letter-spacing="12">SPRING GARDEN</text>
+
+            <!-- Minimalist Gold & Blush Dividers -->
+            <g transform="translate(600, 640)">
+                <line x1="-150" y1="0" x2="150" y2="0" stroke="#caa366" stroke-width="2"/>
+                <circle cx="0" cy="0" r="10" fill="#f4dada"/>
+                <circle cx="0" cy="0" r="4" fill="#caa366"/>
+            </g>
+            <g transform="translate(600, 1160)">
+                <line x1="-150" y1="0" x2="150" y2="0" stroke="#caa366" stroke-width="2"/>
+                <circle cx="0" cy="0" r="10" fill="#f4dada"/>
+                <circle cx="0" cy="0" r="4" fill="#caa366"/>
+            </g>
+
+            <!-- Footer Typography -->
+            <text x="600" y="1715" font-family="'Times New Roman', serif" font-weight="normal" font-size="48" fill="#caa366" text-anchor="middle" letter-spacing="6">Allen &amp; Marry</text>
+            <text x="600" y="1755" font-family="'Arial', sans-serif" font-weight="bold" font-size="22" fill="#93a897" text-anchor="middle" letter-spacing="8">08 . 09 . 2026</text>
+        </svg>`;
+
+        const imgSingleOverlay = new Image();
+        imgSingleOverlay.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(singleSVG)));
+        
+        const imgTripleOverlay = new Image();
+        imgTripleOverlay.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(tripleSVG)));
+
+        // State variables
+        let userSingleImg = null;
+        let userStripImgs = [null, null, null];
+        let singleOffset = 0;
+        let singleZoom = 1;
+
+        // --- PRE-LOAD USER'S UPLOADED IMAGE ---
+        const defaultImg = new Image();
+        defaultImg.onload = () => {
+            // Once loaded, set it as the default for all slots
+            userSingleImg = defaultImg;
+            userStripImgs = [defaultImg, defaultImg, defaultImg];
+            renderSingleCanvas();
+            renderStripCanvas();
+        };
+        // This references the exact filename you just uploaded to the chat!
+        defaultImg.src = "81ee213a-9954-4772-a34e-0b432e682267-1_all_92243.jpg";
+
+        // --- DRAWING ENGINE WITH ZOOM & OFFSET ---
+        function drawImageCover(ctx, img, dstX, dstY, dstW, dstH, offsetY = 0, zoom = 1) {
+            if(!img) return;
+            
+            // Calculate base scale to fill the rectangle completely
+            let baseScale = Math.max(dstW / img.width, dstH / img.height);
+            let finalScale = baseScale * zoom; // Apply user zoom
+            
+            let drawW = img.width * finalScale;
+            let drawH = img.height * finalScale;
+            
+            // Center the image, then apply the Y offset
+            let drawX = dstX + (dstW - drawW) / 2;
+            let drawY = dstY + (dstH - drawH) / 2 + offsetY;
+            
+            ctx.drawImage(img, 0, 0, img.width, img.height, drawX, drawY, drawW, drawH);
+        }
+
+        function renderSingleCanvas() {
+            const canvas = document.getElementById('canvas-single');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, 1200, 1800);
+            
+            // Draw photo with Zoom and Offset
+            if (userSingleImg) {
+                drawImageCover(ctx, userSingleImg, 0, 0, 1200, 1800, singleOffset, singleZoom);
+            }
+            
+            // Draw overlay frame
+            if (imgSingleOverlay.complete) ctx.drawImage(imgSingleOverlay, 0, 0);
+        }
+
+        function renderStripCanvas() {
+            const canvas = document.getElementById('canvas-strip');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, 1200, 1800);
+            
+            const positionsY = [150, 670, 1190]; // Updated Y coordinates for the new strip design
+            for (let i = 0; i < 3; i++) {
+                if (userStripImgs[i]) drawImageCover(ctx, userStripImgs[i], 150, positionsY[i], 900, 460);
+            }
+            
+            if (imgTripleOverlay.complete) ctx.drawImage(imgTripleOverlay, 0, 0);
+        }
+
+        // Overlay load fallbacks
+        imgSingleOverlay.onload = renderSingleCanvas;
+        imgTripleOverlay.onload = renderStripCanvas;
+
+        // --- EVENT LISTENERS FOR CONTROLS ---
+        document.getElementById('upload-single').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = () => { userSingleImg = img; renderSingleCanvas(); }
+                img.src = event.target.result;
+            }
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById('offset-single').addEventListener('input', function(e) {
+            singleOffset = parseInt(e.target.value);
+            renderSingleCanvas();
+        });
+
+        document.getElementById('zoom-single').addEventListener('input', function(e) {
+            singleZoom = parseFloat(e.target.value);
+            renderSingleCanvas();
+        });
+
+        for(let i=1; i<=3; i++) {
+            document.getElementById(`upload-strip-${i}`).addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = () => { userStripImgs[i-1] = img; renderStripCanvas(); }
+                    img.src = event.target.result;
+                }
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // --- UI NAVIGATION ---
+        function switchTab(tab) {
+            const sTab = document.getElementById('tab-single'); const tTab = document.getElementById('tab-strip');
+            const sSec = document.getElementById('section-single'); const tSec = document.getElementById('section-strip');
+            
+            if(tab === 'single') {
+                sTab.className = "px-6 py-2 rounded-full font-bold bg-[#caa366] text-black shadow-[0_0_15px_rgba(202,163,102,0.4)] transition"; 
+                tTab.className = "px-6 py-2 rounded-full font-bold bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition";
+                sSec.classList.replace('hidden', 'flex'); tSec.classList.replace('flex', 'hidden');
+            } else {
+                tTab.className = "px-6 py-2 rounded-full font-bold bg-[#caa366] text-black shadow-[0_0_15px_rgba(202,163,102,0.4)] transition"; 
+                sTab.className = "px-6 py-2 rounded-full font-bold bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition";
+                tSec.classList.replace('hidden', 'flex'); sSec.classList.replace('flex', 'hidden');
+            }
+        }
+
+        // --- DOWNLOAD HANDLER ---
+        function downloadCanvas(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = canvas.width; tempCanvas.height = canvas.height;
+            const tCtx = tempCanvas.getContext('2d');
+            
+            // JPEGs don't support transparency, so draw a white backdrop first
+            tCtx.fillStyle = '#ffffff'; tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+            tCtx.drawImage(canvas, 0, 0);
+            
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = tempCanvas.toDataURL('image/jpeg', 0.98); // High quality JPG
+            link.click();
+        }
+    </script>
 </body>
 </html>
+
+```
