@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>The Stables Cottage | Android Photo Booth</title>
+    <title>The Stables Cottage | Offline Photo Booth</title>
+    
     <style>
         /* =========================================
            VIBESHOOT NATIVE OFFLINE CSS ENGINE
@@ -21,11 +22,15 @@
         ::-webkit-scrollbar { display: none; }
         body { background: var(--zinc-950); color: white; overflow: hidden; width: 100vw; height: 100vh; font-family: system-ui, -apple-system, sans-serif; }
 
+        /* Utility Classes */
         .hidden { display: none !important; }
         .flex { display: flex; }
+        .w-full { width: 100%; }
+        .h-full { height: 100%; }
         .cursor-pointer { cursor: pointer; }
         .z-10 { z-index: 10; } .z-20 { z-index: 20; } .z-30 { z-index: 30; } .z-40 { z-index: 40; } .z-50 { z-index: 50; }
         
+        /* Layout Screens */
         .screen-base { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; }
         .overlay-blur { background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
         .bg-dark { background: var(--zinc-950); }
@@ -49,10 +54,16 @@
         input[type="file"]::file-selector-button { margin-right: 1rem; padding: 0.5rem 1rem; border-radius: 9999px; border: none; font-size: 0.75rem; font-weight: 600; background: var(--zinc-800); color: white; cursor: pointer; transition: 0.2s; }
         
         .btn { padding: 0.75rem 1.5rem; font-weight: 700; border-radius: 0.5rem; cursor: pointer; text-align: center; border: none; transition: 0.2s; font-size: 0.875rem; width: 100%; }
+        .btn-blue { background: var(--blue-600); color: white; margin-bottom: 0.5rem; }
+        .btn-blue:hover { background: var(--blue-500); }
         .btn-emerald { background: var(--emerald-600); color: white; margin-bottom: 0.5rem; }
+        .btn-emerald:hover { background: var(--emerald-500); }
+        .btn-red { background: var(--red-600); color: white; margin-bottom: 0.5rem; }
         .btn-launch { padding: 1rem; font-size: 1.125rem; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 0.75rem; margin-top: 2rem; background: var(--gold-500); color: black; font-weight: 900; }
+        .btn-launch:hover { background: var(--gold-400); }
         
-        .status-ok { font-size: 0.8rem; font-weight: 700; margin-top: 0.75rem; color: var(--emerald-500); background: rgba(16, 185, 129, 0.1); padding: 0.5rem; border-radius: 0.5rem;}
+        #local-dir-status { font-size: 0.75rem; font-weight: 700; margin-top: 0.25rem; font-style: italic; color: var(--red-400); }
+        .status-ok { color: var(--emerald-500) !important; }
 
         /* RUNTIME APP */
         .blur-bg-engine { position: absolute; inset: -5%; width: 110%; height: 110%; background-size: cover; background-position: center; filter: blur(8px) brightness(40%); z-index: 0; transition: background-image 0.8s ease-in-out; }
@@ -71,7 +82,8 @@
         .preview-strip { width: 8rem; height: 12rem; background: var(--zinc-900); border: 2px solid white; border-radius: 0.25rem; padding: 0.5rem; display: flex; flex-direction: column; gap: 0.375rem; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
         .preview-box { flex: 1; background: var(--zinc-800); border-radius: 0.125rem; }
         .layout-title { font-size: 1.25rem; font-weight: 700; margin-top: 1.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
-        .btn-cancel { margin-top: 3rem; color: var(--zinc-400); font-weight: 700; text-transform: uppercase; background: none; border: none; cursor: pointer; font-size: 1rem; }
+        .btn-cancel { margin-top: 3rem; color: var(--zinc-400); font-weight: 700; text-transform: uppercase; background: none; border: none; cursor: pointer; font-size: 1rem; transition: 0.2s;}
+        .btn-cancel:hover { color: white; }
 
         /* Camera Screen */
         .video-container { position: relative; width: 100%; max-width: 64rem; aspect-ratio: 16/9; background: black; border-radius: 1.5rem; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 0 50px rgba(0,0,0,0.8); }
@@ -109,7 +121,9 @@
 
         .action-row { display: flex; gap: 1rem; width: 100%; margin-top: auto; }
         .btn-retake { flex: 1; padding: 1rem; background: var(--zinc-800); color: white; font-weight: 700; border-radius: 0.75rem; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em; transition: 0.2s; }
+        .btn-retake:hover { background: var(--zinc-700); }
         .btn-done { flex: 2; padding: 1rem; background: var(--gold-500); color: black; font-weight: 900; border-radius: 0.75rem; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em; transition: 0.2s; box-shadow: 0 0 25px rgba(202,163,102,0.4); }
+        .btn-done:hover { background: var(--gold-400); }
 
         /* Save Screen */
         .save-box { background: rgba(20,20,25,0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(202,163,102,0.3); border-radius: 1.5rem; padding: 3rem; text-align: center; width: 100%; max-width: 36rem; }
@@ -124,6 +138,7 @@
         #alert-title { color: var(--red-400); font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
         #alert-message { color: var(--zinc-300); font-size: 0.875rem; margin-bottom: 1.5rem; line-height: 1.5; }
         .btn-dismiss { background: var(--zinc-800); color: white; font-weight: 700; padding: 0.75rem 2rem; border-radius: 0.75rem; border: none; cursor: pointer; transition: 0.2s; }
+        .btn-dismiss:hover { background: var(--zinc-700); }
     </style>
 </head>
 <body>
@@ -141,30 +156,37 @@
     <div id="setup-screen" class="screen-base bg-dark">
         <div class="setup-card">
             <div class="setup-header">
-                <h2>Android Tablet Dashboard</h2>
-                <p>Offline Auto-Download Mode | The Stables Edition</p>
+                <h2>System Dashboard</h2>
+                <p>100% Offline USB Mode | No Internet Required</p>
             </div>
 
             <div class="grid-2">
                 <!-- Left Col -->
                 <div>
                     <div class="panel">
-                        <span class="panel-label">1. Storage Target</span>
-                        <p class="status-ok">✅ Saving directly to Tablet Downloads/Gallery folder.</p>
-                        <p style="font-size: 0.65rem; color: var(--zinc-500); margin-top: 0.5rem;">(Android does not support direct-to-USB web mapping. Copy files to USB later).</p>
+                        <span class="panel-label">1. Map USB Storage</span>
+                        <button class="btn btn-blue" onclick="handleLocalDirClick(event)">📁 Select Main USB Folder</button>
+                        <p id="local-dir-status">Waiting for USB target...</p>
+                        <p style="font-size: 0.65rem; color: var(--zinc-500); margin-top: 0.5rem;">System will automatically create 'raw' and 'edited' folders inside your selection.</p>
                     </div>
 
                     <div class="panel">
-                        <span class="panel-label">2. Hardware Setup</span>
-                        <button class="btn btn-emerald" onclick="requestCameraPermissions()">📸 Authorize Tablet Camera</button>
-                        <select id="camera-select" class="hidden">
-                            <option value="">Select your camera...</option>
-                        </select>
+                        <span class="panel-label">2. Initialize Hardware</span>
+                        <button id="auth-cam-btn" class="btn btn-emerald" onclick="requestCameraPermissions()">📸 Authorize & Find Cameras</button>
+                        
+                        <div id="camera-controls" class="hidden" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <select id="camera-select">
+                                <option value="">Select your camera...</option>
+                            </select>
+                            <button class="btn" style="background: var(--zinc-800); color: var(--zinc-300); font-size: 0.75rem; padding: 0.5rem;" onclick="requestCameraPermissions()">
+                                🔄 Refresh List
+                            </button>
+                        </div>
                     </div>
 
                     <div class="grid-2-sm">
                         <div>
-                            <label style="font-size: 0.75rem; color: var(--zinc-500); font-weight: bold; text-transform: uppercase;">Event Prefix:</label>
+                            <label style="font-size: 0.75rem; color: var(--zinc-500); font-weight: bold; text-transform: uppercase;">Event Name:</label>
                             <input type="text" id="event-name-input" value="AllenMarry">
                         </div>
                         <div>
@@ -189,7 +211,7 @@
                 </div>
             </div>
 
-            <button class="btn btn-launch" onclick="lockAndInitBooth()">Launch Booth Terminal</button>
+            <button class="btn btn-launch" onclick="lockAndInitBooth()">Launch Terminal</button>
         </div>
     </div>
 
@@ -286,7 +308,334 @@
         <!-- STAGE 5: SAVING -->
         <div id="share-screen" class="screen-base overlay-blur z-40 hidden">
             <div class="save-box">
-                <h2 id="save-status-headline" class="save-title">Downloading to Tablet...</h2>
+                <h2 id="save-status-headline" class="save-title">Saving to USB...</h2>
                 <p class="save-pulse">Please wait</p>
-                <div class="save-icon">⬇️</div>
- 
+                <div class="save-icon">💾</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let eventName = "AllenMarry";
+        let currentCount = 1;
+        let selectedCameraId = "";
+        let currentTemplate = 1; 
+        let capturedImages = [];
+        let localStream = null;
+        let currentFilterCode = 'none';
+
+        const CSS_FILTERS = {
+            'normal': 'none',
+            'bw': 'grayscale(100%)',
+            'vintage': 'sepia(60%) contrast(110%) saturate(110%) hue-rotate(-10deg)'
+        };
+
+        // File System API Handles (For USB/Local saving)
+        let usbDirHandle = null;
+        let rawDirHandle = null;
+        let editedDirHandle = null;
+
+        const singleFrameImg = new Image();
+        const tripleFrameImg = new Image();
+        let singleFrameLoaded = false;
+        let tripleFrameLoaded = false;
+
+        window.onload = function() {
+            setupFileListeners();
+            if(localStorage.getItem('booth_session_seq_id')) currentCount = parseInt(localStorage.getItem('booth_session_seq_id'));
+        };
+
+        // --- HARDWARE CAMERA SELECTION ---
+        async function requestCameraPermissions() {
+            const btn = document.getElementById('auth-cam-btn');
+            const controls = document.getElementById('camera-controls');
+            const select = document.getElementById('camera-select');
+            
+            btn.innerText = "Scanning Ports...";
+            
+            try {
+                // Request temporary access to force the permission prompt
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                stream.getTracks().forEach(track => track.stop());
+                
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const videoDevices = devices.filter(d => d.kind === 'videoinput');
+                
+                select.innerHTML = '';
+                videoDevices.forEach((device, index) => {
+                    const option = document.createElement('option');
+                    option.value = device.deviceId;
+                    option.text = device.label || `Camera ${index + 1}`;
+                    if (device.label.toLowerCase().includes('uvc') || device.label.toLowerCase().includes('dji')) option.selected = true;
+                    select.appendChild(option);
+                });
+
+                btn.classList.add('hidden');
+                controls.style.display = 'flex'; // Show dropdown and refresh button
+                
+            } catch (err) {
+                btn.innerText = "📸 Camera Blocked!";
+                btn.classList.replace('btn-emerald', 'btn-red');
+                triggerAlertModal("Security Restriction", "Your browser blocked the camera. Remember, to run this offline, you must run a Local Server app instead of double-clicking the HTML file.");
+            }
+        }
+
+        // --- DIRECT USB FOLDER MAPPING ---
+        async function handleLocalDirClick(e) {
+            e.preventDefault();
+            try {
+                if (!window.showDirectoryPicker) { triggerAlertModal("Browser Limitation", "Your browser does not support Local USB mapping. Try running this in Desktop Chrome."); return; }
+                
+                // Prompt user to select their USB drive
+                usbDirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+                
+                // Auto-create necessary subfolders inside the USB
+                rawDirHandle = await usbDirHandle.getDirectoryHandle('raw', { create: true });
+                editedDirHandle = await usbDirHandle.getDirectoryHandle('edited', { create: true });
+                
+                const st = document.getElementById('local-dir-status');
+                st.innerText = `✅ USB Mapped: /${usbDirHandle.name}`;
+                st.classList.add('status-ok');
+            } catch (err) { 
+                if (err.name !== 'AbortError') triggerAlertModal("USB Error", err.message); 
+            }
+        }
+
+        function setupFileListeners() {
+            document.getElementById('single-frame-input').addEventListener('change', e => {
+                if (e.target.files[0]) { const r = new FileReader(); r.onload = ev => { singleFrameImg.onload = () => singleFrameLoaded = true; singleFrameImg.src = ev.target.result; }; r.readAsDataURL(e.target.files[0]); }
+            });
+            document.getElementById('triple-frame-input').addEventListener('change', e => {
+                if (e.target.files[0]) { const r = new FileReader(); r.onload = ev => { tripleFrameImg.onload = () => tripleFrameLoaded = true; tripleFrameImg.src = ev.target.result; }; r.readAsDataURL(e.target.files[0]); }
+            });
+            document.getElementById('bg-file-input').addEventListener('change', e => {
+                if (e.target.files[0]) { const r = new FileReader(); r.onload = ev => { document.getElementById('master-blur-bg').style.backgroundImage = `url('${ev.target.result}')`; }; r.readAsDataURL(e.target.files[0]); }
+            });
+        }
+
+        function triggerAlertModal(t, m) { document.getElementById('alert-title').innerText = t; document.getElementById('alert-message').innerText = m; document.getElementById('booth-alert-modal').classList.remove('hidden'); }
+        function closeAlertModal() { document.getElementById('booth-alert-modal').classList.add('hidden'); }
+        function triggerFullscreen() { const d = document.documentElement; if(d.requestFullscreen) d.requestFullscreen().catch(()=>{}); }
+
+        function lockAndInitBooth() {
+            if (!usbDirHandle) { triggerAlertModal("USB Required", "Please select a Local/USB storage folder first."); return; }
+            selectedCameraId = document.getElementById('camera-select').value;
+            if (!selectedCameraId) { triggerAlertModal("Camera Required", "Please authorize and select a camera."); return; }
+            
+            eventName = document.getElementById('event-name-input').value.trim().replace(/\s+/g, '_') || "Wedding";
+            currentCount = parseInt(document.getElementById('counter-input').value) || 1;
+            
+            triggerFullscreen();
+            document.getElementById('setup-screen').classList.add('hidden');
+            document.getElementById('app-wrapper').classList.remove('hidden');
+        }
+
+        function showLayoutSelection() {
+            document.getElementById('idle-screen').classList.add('hidden');
+            document.getElementById('selection-screen').classList.remove('hidden');
+        }
+
+        async function startCameraSession(templateId) {
+            currentTemplate = templateId;
+            capturedImages = [];
+            currentFilterCode = 'none'; 
+            
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.filter-btn').classList.add('active');
+
+            document.getElementById('selection-screen').classList.add('hidden');
+            document.getElementById('shoot-screen').classList.remove('hidden');
+
+            const progBox = document.getElementById('capture-progress');
+            if(templateId === 3) {
+                progBox.classList.remove('hidden');
+                document.querySelectorAll('#capture-progress div').forEach(d => d.classList.remove('prog-filled'));
+            } else {
+                progBox.classList.add('hidden');
+            }
+
+            try {
+                const constraints = { video: { width: { ideal: 1920 }, height: { ideal: 1080 } } };
+                if (selectedCameraId) constraints.video.deviceId = { exact: selectedCameraId };
+                localStream = await navigator.mediaDevices.getUserMedia(constraints);
+                document.getElementById('booth-preview').srcObject = localStream;
+                setTimeout(runShutterSequence, 1500);
+            } catch (err) {
+                triggerAlertModal("Camera Error", "Could not load camera feed.");
+                returnToStandby();
+            }
+        }
+
+        function runShutterSequence() {
+            const instCard = document.getElementById('instruction-card');
+            const countCard = document.getElementById('countdown-card');
+            const countText = document.getElementById('countdown-text');
+
+            instCard.classList.remove('hidden');
+            countCard.classList.add('hidden');
+
+            setTimeout(() => {
+                instCard.classList.add('hidden');
+                countCard.classList.remove('hidden');
+
+                let count = 3;
+                let cTimer = setInterval(() => {
+                    if (count > 1) {
+                        count--;
+                        countText.innerText = count;
+                    } else {
+                        clearInterval(cTimer);
+                        countCard.classList.add('hidden');
+                        executeFlashAndCapture();
+                    }
+                }, 1000);
+            }, 1500);
+        }
+
+        function executeFlashAndCapture() {
+            const flash = document.getElementById('flash-screen');
+            flash.classList.add('flash-fire');
+
+            const video = document.getElementById('booth-preview');
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            
+            ctx.translate(canvas.width, 0); ctx.scale(-1, 1);
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const img = new Image();
+            img.src = canvas.toDataURL('image/jpeg', 1.0);
+            capturedImages.push(img);
+
+            if(currentTemplate === 3) document.getElementById(`prog-${capturedImages.length}`).classList.add('prog-filled');
+
+            setTimeout(() => {
+                flash.classList.remove('flash-fire');
+                document.getElementById('countdown-text').innerText = "3";
+                
+                if (capturedImages.length < currentTemplate) {
+                    setTimeout(runShutterSequence, 1000);
+                } else {
+                    if (localStream) localStream.getTracks().forEach(t => t.stop());
+                    document.getElementById('shoot-screen').classList.add('hidden');
+                    buildReviewStudio();
+                }
+            }, 300);
+        }
+
+        // --- REVIEW & STITCHING ENGINE ---
+        function buildReviewStudio() {
+            document.getElementById('review-screen').classList.remove('hidden');
+            updatePreviewImage();
+        }
+
+        function applyFilter(filterKey, btnElement) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+            currentFilterCode = CSS_FILTERS[filterKey];
+            updatePreviewImage();
+        }
+
+        function drawImageCover(ctx, img, dstX, dstY, dstW, dstH) {
+            const imgRatio = img.width / img.height; const dstRatio = dstW / dstH;
+            let srcX = 0, srcY = 0, srcW = img.width, srcH = img.height;
+            if (imgRatio > dstRatio) { srcW = img.height * dstRatio; srcX = (img.width - srcW) / 2; } 
+            else { srcH = img.width / dstRatio; srcY = (img.height - srcH) / 2; }
+            ctx.drawImage(img, srcX, srcY, srcW, srcH, dstX, dstY, dstW, dstH);
+        }
+
+        function generateFinalCanvasData() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            if (currentTemplate === 1) {
+                canvas.width = 1800; canvas.height = 1200;
+            } else {
+                canvas.width = 1200; canvas.height = 1800;
+            }
+            
+            ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 1. Draw Photos WITH Filter
+            ctx.filter = currentFilterCode;
+            if (currentTemplate === 1 && capturedImages[0]) {
+                drawImageCover(ctx, capturedImages[0], 0, 0, 1800, 1200);
+            } else if (currentTemplate === 3) {
+                const positionsY = [150, 670, 1190];
+                for (let i = 0; i < 3; i++) {
+                    if(capturedImages[i]) drawImageCover(ctx, capturedImages[i], 150, positionsY[i], 900, 460);
+                }
+            }
+
+            // 2. Reset Filter & Draw Overlays on top
+            ctx.filter = 'none';
+            if (currentTemplate === 1 && singleFrameLoaded) ctx.drawImage(singleFrameImg, 0, 0, 1800, 1200);
+            if (currentTemplate === 3 && tripleFrameLoaded) ctx.drawImage(tripleFrameImg, 0, 0, 1200, 1800);
+
+            return canvas.toDataURL('image/jpeg', 0.95);
+        }
+
+        function updatePreviewImage() {
+            const dataUrl = generateFinalCanvasData();
+            document.getElementById('final-preview-image').src = dataUrl;
+        }
+
+        // --- DIRECT USB / LOCAL WRITING ---
+        async function writeBlobToDir(base64Data, fileName, dirHandle) {
+            try {
+                const byteChars = atob(base64Data);
+                const byteNums = new Array(byteChars.length);
+                for (let i = 0; i < byteChars.length; i++) byteNums[i] = byteChars.charCodeAt(i);
+                const blob = new Blob([new Uint8Array(byteNums)], { type: 'image/jpeg' });
+
+                // Write the file block to the selected Local Drive
+                const fileHandle = await dirHandle.getFileHandle(fileName, { create: true });
+                const writable = await fileHandle.createWritable();
+                await writable.write(blob);
+                await writable.close();
+            } catch(e) { console.error("USB Write failed", e); }
+        }
+
+        async function finalizeAndSave() {
+            document.getElementById('review-screen').classList.add('hidden');
+            document.getElementById('share-screen').classList.remove('hidden');
+            
+            const statusLabel = document.getElementById('save-status-headline');
+            const dateStr = new Date().toISOString().split('T')[0];
+            const pCount = String(currentCount).padStart(3, '0');
+
+            if (rawDirHandle) {
+                statusLabel.innerText = "Saving RAW files to Local Storage...";
+                for (let i = 0; i < capturedImages.length; i++) {
+                    const base64Data = capturedImages[i].src.split(',')[1];
+                    await writeBlobToDir(base64Data, `${dateStr}_${eventName}_RAW_${pCount}_${i+1}.jpg`, rawDirHandle);
+                }
+            }
+
+            if (editedDirHandle) {
+                statusLabel.innerText = "Saving Filtered Output to Local Storage...";
+                const finalBase64 = generateFinalCanvasData().split(',')[1];
+                const typeStr = currentTemplate === 1 ? 'Landscape' : 'Strip';
+                await writeBlobToDir(finalBase64, `${dateStr}_${eventName}_${typeStr}_${pCount}.jpg`, editedDirHandle);
+            }
+
+            currentCount++;
+            localStorage.setItem('booth_session_seq_id', currentCount);
+            statusLabel.innerText = "Saved Successfully! ✓";
+            setTimeout(returnToStandby, 2500);
+        }
+
+        function returnToStandby() {
+            if (localStream) localStream.getTracks().forEach(t => t.stop());
+            document.getElementById('selection-screen').classList.add('hidden');
+            document.getElementById('shoot-screen').classList.add('hidden');
+            document.getElementById('review-screen').classList.add('hidden');
+            document.getElementById('share-screen').classList.add('hidden');
+            
+            document.getElementById('save-status-headline').innerText = "Saving to USB..."; 
+            document.getElementById('idle-screen').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
